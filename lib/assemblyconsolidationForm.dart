@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class assemblyconsole extends StatelessWidget {
-  const assemblyconsole({Key? key}) : super(key: key);
+class AssemblyConsole extends StatelessWidget {
+  const AssemblyConsole({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -10,14 +10,15 @@ class assemblyconsole extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: Text('NA5-Assembly Consolidation'),
-          backgroundColor: Colors.blue,
+          title: const Text(
+            'NA5-Assembly Consolidation',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.indigo.shade900,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ), // Blue app bar
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
         body: const WorksheetForm(),
       ),
@@ -26,21 +27,27 @@ class assemblyconsole extends StatelessWidget {
 }
 
 class WorksheetForm extends StatefulWidget {
-  const WorksheetForm({super.key});
+  const WorksheetForm({Key? key}) : super(key: key);
 
   @override
-  _WorksheetForm createState() => _WorksheetForm();
+  _WorksheetFormState createState() => _WorksheetFormState();
 }
 
-class _WorksheetForm extends State<WorksheetForm> {
-  final _formKey = GlobalKey<FormState>();
+class _WorksheetFormState extends State<WorksheetForm> {
+  // Correctly initialize the GlobalKey<FormState>
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // TextEditingControllers for capturing input
-  TextEditingController monthController = TextEditingController();
+  final TextEditingController monthController = TextEditingController();
 
   // Dropdown values
   String? selectedStd;
   String? selectedShift;
+
+  // Get current date, time, and day
+  String getCurrentDate() => DateFormat('dd-MM-yyyy').format(DateTime.now());
+  String getCurrentTime() => DateFormat('hh:mm a').format(DateTime.now());
+  String getCurrentDay() => DateFormat('EEEE').format(DateTime.now());
 
   // Function to show Date Picker for Month selection
   Future<void> _selectMonth(BuildContext context) async {
@@ -53,156 +60,232 @@ class _WorksheetForm extends State<WorksheetForm> {
 
     if (picked != null) {
       setState(() {
-        // Format the picked date into 'dd MMMM yyyy'
         monthController.text = DateFormat('dd MMMM yyyy').format(picked);
-      });
-    } else {
-      // If the user cancels the date picker, make sure no error is thrown.
-      setState(() {
-        monthController.text = ''; // Optionally clear the field
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.white, Colors.blue.shade100, Colors.blue.shade600],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: ListView(
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Form(
+        key: _formKey, // Correctly assigning the key to the Form
+        child: ListView(
+          children: [
+            // Row to display Date, Time, and Day at the top
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                GestureDetector(
-                  onTap: () => _selectMonth(context),
-                  child: AbsorbPointer(
-                    child: TextFormField(
-                      controller: monthController,
-                      decoration: InputDecoration(
-                        labelText: 'Select Date',
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please select the date';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                DropdownButtonFormField<String>(
-                  value: selectedStd,
-                  decoration: InputDecoration(
-                    labelText: 'Std',
-                    border: OutlineInputBorder(),
-                  ),
-                  hint: Text('Select Std'),
-                  items: [
-                    'LKG',
-                    'UKG',
-                    'I',
-                    'II',
-                    'III',
-                    'IV',
-                    'V',
-                    'VI',
-                    'VII',
-                    'VIII',
-                    'IX',
-                    'X',
-                    'XI',
-                    'XII'
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedStd = newValue;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please select the class';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 10),
-                DropdownButtonFormField<String>(
-                  value: selectedShift,
-                  decoration: InputDecoration(
-                    labelText: 'Shift',
-                    border: OutlineInputBorder(),
-                  ),
-                  hint: Text('Select Shift'),
-                  items: ['FN', 'AN']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedShift = newValue;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please select the shift';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    // Save as Draft Logic
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Form saved as draft')),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                  ),
-                  child: const Text(
-                    'Save as Draft',
-                    style: TextStyle(
-                        color: Colors.black), // Correct way to style text
-                  ),
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Form Submitted')),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                  ),
-                  child: const Text(
-                    'Submit',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
+                _buildInfoBox('Date', getCurrentDate()),
+                _buildInfoBox('Time', getCurrentTime()),
+                _buildInfoBox('Day', getCurrentDay()),
               ],
             ),
-          ),
-        ));
+            const SizedBox(height: 20),
+
+            // Input fields start here
+            GestureDetector(
+              onTap: () => _selectMonth(context),
+              child: AbsorbPointer(
+                child: TextFormField(
+                  controller: monthController,
+                  style: const TextStyle(
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  decoration: const InputDecoration(
+                    labelText: 'Select Date',
+                    labelStyle: const TextStyle(
+                      fontWeight: FontWeight.bold, // Make the label text bold
+                      color: Colors.black, // Change label color to black
+                    ),
+                    border: const OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.black87,
+                          width: 2.0), // Set border color and width
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.black87,
+                          width: 2.0), // Set focused border color and width
+                    ),
+                    enabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.black87,
+                          width: 2.0), // Set enabled border color and width
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please select the date';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            DropdownButtonFormField<String>(
+              value: selectedStd,
+              style: const TextStyle(
+                color: Colors.black87,
+                fontWeight: FontWeight.bold,
+              ),
+              decoration: const InputDecoration(
+                labelText: 'Std',
+                labelStyle: const TextStyle(
+                  fontWeight: FontWeight.bold, // Make the label text bold
+                  color: Colors.black, // Change label color to black
+                ),
+                border: const OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Colors.black87,
+                      width: 2.0), // Set border color and width
+                ),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Colors.black87,
+                      width: 2.0), // Set focused border color and width
+                ),
+                enabledBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Colors.black87,
+                      width: 2.0), // Set enabled border color and width
+                ),
+              ),
+              hint: const Text('Select Std'),
+              items: [
+                'LKG',
+                'UKG',
+                'I',
+                'II',
+                'III',
+                'IV',
+                'V',
+                'VI',
+                'VII',
+                'VIII',
+                'IX',
+                'X',
+                'XI',
+                'XII'
+              ].map((value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (newValue) {
+                setState(() {
+                  selectedStd = newValue;
+                });
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please select the class';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 10),
+            DropdownButtonFormField<String>(
+              value: selectedShift,
+              style: const TextStyle(
+                color: Colors.black87,
+                fontWeight: FontWeight.bold,
+              ),
+              decoration: const InputDecoration(
+                labelText: 'Shift',
+                labelStyle: const TextStyle(
+                  fontWeight: FontWeight.bold, // Make the label text bold
+                  color: Colors.black, // Change label color to black
+                ),
+                border: const OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Colors.black87,
+                      width: 2.0), // Set border color and width
+                ),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Colors.black87,
+                      width: 2.0), // Set focused border color and width
+                ),
+                enabledBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Colors.black87,
+                      width: 2.0), // Set enabled border color and width
+                ),
+              ),
+              hint: const Text('Select Shift'),
+              items: ['FN', 'AN'].map((value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (newValue) {
+                setState(() {
+                  selectedShift = newValue;
+                });
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please select the shift';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Form saved as draft')),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.indigo.shade900,
+              ),
+              child: const Text('Save as Draft',
+                  style: TextStyle(color: Colors.white)),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Form Submitted')),
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.indigo.shade900,
+              ),
+              child:
+                  const Text('Submit', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Helper function to build an info box for Date, Time, and Day
+  Widget _buildInfoBox(String label, String value) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black87, width: 2.0),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Column(
+        children: [
+          Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 4),
+          Text(value, style: const TextStyle(fontSize: 16)),
+        ],
+      ),
+    );
   }
 }
+

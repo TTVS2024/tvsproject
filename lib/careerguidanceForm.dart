@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-
 class careerguidance extends StatelessWidget {
   const careerguidance({super.key});
 
@@ -11,10 +10,13 @@ class careerguidance extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: Text('NA11-Career Guidance/Talk'),
-          backgroundColor: Colors.blue,
+          title: const Text(
+            'NA5-Assembly Consolidation',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.indigo.shade900,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -34,7 +36,7 @@ class WorksheetForm extends StatefulWidget {
 }
 
 class _WorksheetFormState extends State<WorksheetForm> {
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // TextEditingControllers for capturing input
   TextEditingController monthController = TextEditingController();
@@ -51,6 +53,10 @@ class _WorksheetFormState extends State<WorksheetForm> {
   String? selectedLevel;
   String? selectedStd;
 
+  String getCurrentDate() => DateFormat('dd-MM-yyyy').format(DateTime.now());
+  String getCurrentTime() => DateFormat('hh:mm a').format(DateTime.now());
+  String getCurrentDay() => DateFormat('EEEE').format(DateTime.now());
+
   // Function to show Date Picker for Month selection
   Future<void> _selectMonth(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -65,38 +71,57 @@ class _WorksheetFormState extends State<WorksheetForm> {
         // Format the picked date into 'dd MMMM yyyy'
         monthController.text = DateFormat('dd MMMM yyyy').format(picked);
       });
-    } else {
-      // If the user cancels the date picker, make sure no error is thrown.
-      setState(() {
-        monthController.text = ''; // Optionally clear the field
-      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.white, Colors.blue.shade100, Colors.blue.shade600],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: ListView(
             children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildInfoBox('Date', getCurrentDate()),
+                  _buildInfoBox('Time', getCurrentTime()),
+                  _buildInfoBox('Day', getCurrentDay()),
+                ],
+              ),
+              const SizedBox(height: 20),
               GestureDetector(
                 onTap: () => _selectMonth(context),
                 child: AbsorbPointer(
                   child: TextFormField(
                     controller: monthController,
+                    style: const TextStyle(
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold,
+                    ),
                     decoration: InputDecoration(
                       labelText: 'Select Date',
-                      border: OutlineInputBorder(),
+                      labelStyle: const TextStyle(
+                        fontWeight: FontWeight.bold, // Make the label text bold
+                        color: Colors.black, // Change label color to black
+                      ),
+                      border: const OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors.black87,
+                            width: 2.0), // Set border color and width
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors.black87,
+                            width: 2.0), // Set focused border color and width
+                      ),
+                      enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors.black87,
+                            width: 2.0), // Set enabled border color and width
+                      ),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -110,11 +135,39 @@ class _WorksheetFormState extends State<WorksheetForm> {
               const SizedBox(height: 10),
               DropdownButtonFormField<String>(
                 value: selectedLevel,
+                style: const TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold,
+                ),
                 decoration: InputDecoration(
                   labelText: 'Level',
-                  border: OutlineInputBorder(),
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.bold, // Make the label text bold
+                    color: Colors.black, // Change label color to black
+                  ),
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set border color and width
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set focused border color and width
+                  ),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set enabled border color and width
+                  ),
                 ),
-                hint: Text('Select Level'),
+                hint: Text(
+                  'Select Level',
+                  style: TextStyle(
+                    color: Colors.black, // Black color
+                    fontWeight: FontWeight.bold, // Bold text
+                  ),
+                ),
                 items: [
                   'Level 1',
                   'Level 2',
@@ -125,7 +178,14 @@ class _WorksheetFormState extends State<WorksheetForm> {
                 ].map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child: Text(
+                      value,
+                      style: TextStyle(
+                        color: Colors.black, // Black color for dropdown items
+                        fontWeight:
+                            FontWeight.bold, // Bold text for dropdown items
+                      ),
+                    ),
                   );
                 }).toList(),
                 onChanged: (String? newValue) {
@@ -143,11 +203,39 @@ class _WorksheetFormState extends State<WorksheetForm> {
               const SizedBox(height: 10),
               DropdownButtonFormField<String>(
                 value: selectedStd,
+                style: const TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold,
+                ),
                 decoration: InputDecoration(
                   labelText: 'Std',
-                  border: OutlineInputBorder(),
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.bold, // Make the label text bold
+                    color: Colors.black, // Change label color to black
+                  ),
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set border color and width
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set focused border color and width
+                  ),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set enabled border color and width
+                  ),
                 ),
-                hint: Text('Select Std'),
+                hint: Text(
+                  'Select Level',
+                  style: TextStyle(
+                    color: Colors.black, // Black color
+                    fontWeight: FontWeight.bold, // Bold text
+                  ),
+                ),
                 items: [
                   'LKG',
                   'UKG',
@@ -166,7 +254,14 @@ class _WorksheetFormState extends State<WorksheetForm> {
                 ].map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child: Text(
+                      value,
+                      style: TextStyle(
+                        color: Colors.black, // Black color for dropdown items
+                        fontWeight:
+                            FontWeight.bold, // Bold text for dropdown items
+                      ),
+                    ),
                   );
                 }).toList(),
                 onChanged: (String? newValue) {
@@ -184,9 +279,31 @@ class _WorksheetFormState extends State<WorksheetForm> {
               const SizedBox(height: 10),
               TextFormField(
                 controller: subjectController,
+                style: const TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold,
+                ),
                 decoration: InputDecoration(
                   labelText: 'Subject',
-                  border: OutlineInputBorder(),
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.bold, // Make the label text bold
+                    color: Colors.black, // Change label color to black
+                  ),
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set border color and width
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set focused border color and width
+                  ),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set enabled border color and width
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -198,9 +315,31 @@ class _WorksheetFormState extends State<WorksheetForm> {
               const SizedBox(height: 10),
               TextFormField(
                 controller: topicdiscussedController,
+                style: const TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold,
+                ),
                 decoration: InputDecoration(
                   labelText: 'Topic Discussed',
-                  border: OutlineInputBorder(),
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.bold, // Make the label text bold
+                    color: Colors.black, // Change label color to black
+                  ),
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set border color and width
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set focused border color and width
+                  ),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set enabled border color and width
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -212,9 +351,31 @@ class _WorksheetFormState extends State<WorksheetForm> {
               const SizedBox(height: 10),
               TextFormField(
                 controller: targetgroupController,
+                style: const TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold,
+                ),
                 decoration: InputDecoration(
                   labelText: 'Target Group',
-                  border: OutlineInputBorder(),
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.bold, // Make the label text bold
+                    color: Colors.black, // Change label color to black
+                  ),
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set border color and width
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set focused border color and width
+                  ),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set enabled border color and width
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -226,9 +387,31 @@ class _WorksheetFormState extends State<WorksheetForm> {
               const SizedBox(height: 10),
               TextFormField(
                 controller: addressedbyController,
+                style: const TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold,
+                ),
                 decoration: InputDecoration(
                   labelText: 'Addressed By',
-                  border: OutlineInputBorder(),
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.bold, // Make the label text bold
+                    color: Colors.black, // Change label color to black
+                  ),
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set border color and width
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set focused border color and width
+                  ),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set enabled border color and width
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -240,9 +423,31 @@ class _WorksheetFormState extends State<WorksheetForm> {
               const SizedBox(height: 10),
               TextFormField(
                 controller: guestdetailController,
+                style: const TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold,
+                ),
                 decoration: InputDecoration(
                   labelText: 'Guest Details',
-                  border: OutlineInputBorder(),
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.bold, // Make the label text bold
+                    color: Colors.black, // Change label color to black
+                  ),
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set border color and width
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set focused border color and width
+                  ),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set enabled border color and width
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -254,9 +459,31 @@ class _WorksheetFormState extends State<WorksheetForm> {
               const SizedBox(height: 10),
               TextFormField(
                 controller: noofparticipationController,
+                style: const TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold,
+                ),
                 decoration: InputDecoration(
                   labelText: 'No of Participation',
-                  border: OutlineInputBorder(),
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.bold, // Make the label text bold
+                    color: Colors.black, // Change label color to black
+                  ),
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set border color and width
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set focused border color and width
+                  ),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set enabled border color and width
+                  ),
                 ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
@@ -269,9 +496,31 @@ class _WorksheetFormState extends State<WorksheetForm> {
               const SizedBox(height: 10),
               TextFormField(
                 controller: noofperoidsController,
+                style: const TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold,
+                ),
                 decoration: InputDecoration(
                   labelText: 'No of Peroids',
-                  border: OutlineInputBorder(),
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.bold, // Make the label text bold
+                    color: Colors.black, // Change label color to black
+                  ),
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set border color and width
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set focused border color and width
+                  ),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set enabled border color and width
+                  ),
                 ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
@@ -284,9 +533,31 @@ class _WorksheetFormState extends State<WorksheetForm> {
               const SizedBox(height: 10),
               TextFormField(
                 controller: studentsfeedfackController,
+                style: const TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold,
+                ),
                 decoration: InputDecoration(
                   labelText: 'Students Feedback',
-                  border: OutlineInputBorder(),
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.bold, // Make the label text bold
+                    color: Colors.black, // Change label color to black
+                  ),
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set border color and width
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set focused border color and width
+                  ),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black87,
+                        width: 2.0), // Set enabled border color and width
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -304,12 +575,12 @@ class _WorksheetFormState extends State<WorksheetForm> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
+                  backgroundColor: Colors.indigo.shade900,
                 ),
                 child: const Text(
                   'Save as Draft',
                   style:
-                      TextStyle(color: Colors.black), // Text color set to black
+                      TextStyle(color: Colors.white), // Text color set to black
                 ),
               ),
               const SizedBox(height: 10),
@@ -322,12 +593,12 @@ class _WorksheetFormState extends State<WorksheetForm> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
+                  backgroundColor: Colors.indigo.shade900,
                 ),
                 child: const Text(
                   'Submit',
                   style:
-                      TextStyle(color: Colors.black), // Text color set to black
+                      TextStyle(color: Colors.white), // Text color set to black
                 ),
               ),
             ],
@@ -336,4 +607,21 @@ class _WorksheetFormState extends State<WorksheetForm> {
       ),
     );
   }
+}
+
+Widget _buildInfoBox(String label, String value) {
+  return Container(
+    padding: const EdgeInsets.all(8.0),
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.black87, width: 2.0),
+      borderRadius: BorderRadius.circular(8.0),
+    ),
+    child: Column(
+      children: [
+        Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 4),
+        Text(value, style: const TextStyle(fontSize: 16)),
+      ],
+    ),
+  );
 }
